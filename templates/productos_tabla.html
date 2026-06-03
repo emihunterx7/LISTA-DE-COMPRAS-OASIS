@@ -1,0 +1,51 @@
+{% for p in productos %}
+<div class="card">
+    <div style="position: relative; width: 100%; height: 160px; margin-bottom: 10px; background: #f9f9f9; overflow: hidden; border-radius: 8px;">
+        
+        {% set img_file = obtener_ruta_imagen(p['ProductoId']) %}
+        
+        {% if img_file %}
+            <img src="{{ url_for('static', filename='imagenes/' ~ img_file) }}" 
+                 style="width: 100%; height: 100%; object-fit: contain; display: block;">
+        {% else %}
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ccc;">
+                Sin foto
+            </div>
+        {% endif %}
+
+        {% if p['FechaModificacion'] and p['FechaModificacion'][:10] < fecha_limite %}
+            <div style="position: absolute; top: 15px; left: -10px; right: -10px; background: rgba(231, 76, 60, 0.95); color: white; text-align: center; font-weight: bold; padding: 5px; transform: rotate(-5deg); box-shadow: 0 2px 5px rgba(0,0,0,0.3); pointer-events: none; z-index: 10;">
+                ESTANCADO
+            </div>
+        {% endif %}
+
+        {% if p['Stock'] <= 0 %}
+            <div style="position: absolute; bottom: 15px; left: 0; right: 0; background: rgba(0, 0, 0, 0.85); color: #f1c40f; text-align: center; font-weight: bold; padding: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); pointer-events: none; z-index: 10;">
+                AGOTADO
+            </div>
+        {% endif %}
+    </div>
+    
+    <h3>{{ p['Nombre'] }}</h3>
+    
+    <div class="info">
+        <p>Costo: <span class="valor-grande">${{ p['Costo'] or '0' }}</span></p>
+        <p>Precio: <span class="valor-grande" style="color: #2c3e50;">${{ p['Precio'] }}</span></p>
+        <p>Stock: 
+            <span class="valor-grande" style="color: {{ 'red' if p['Stock'] < p['StockMinimo'] else 'green' }};">
+                {{ p['Stock'] }}
+            </span>
+        </p>
+
+        <div style="font-size: 0.9rem; margin-top: 10px; border-top: 1px solid #eee; padding-top: 5px; text-align: center;">
+            {% if p['FechaModificacion'] %}
+                Alta: {{ p['FechaModificacion'][:10] }}
+            {% else %}
+                Alta: Sin registro
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<p style="padding: 20px;">No se encontraron productos.</p>
+{% endfor %}
