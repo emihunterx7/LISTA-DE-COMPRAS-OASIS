@@ -4,7 +4,7 @@ import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-IMAGE_FOLDER = r"C:\Users\EMI\Desktop\Proyecto_catalogo\static\imagenes"
+IMAGE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'imagenes')
 DB_PATH = r"C:\Users\EMI\Desktop\GestionGratis_v1.6.2.0\Productos.db"
 
 def get_db():
